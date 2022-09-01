@@ -23,7 +23,7 @@ For a new Gmail account, the following steps should be done to setup the Gmail A
 - On the next screen
     - Save and continue
 - On the next screen
-    - **+ Add users**
+    - **+ ADD USERS**
     - Add the email of the Gmail account that was just created 
     - Save and continue
 
