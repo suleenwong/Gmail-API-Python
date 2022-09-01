@@ -37,6 +37,8 @@ For a new Gmail account, the following steps should be done to setup the Gmail A
     - Create
     - Download json, rename it as 'credential.json' and paste it inside project folder
 
+<br>
+
 **Step 4: Enable the Gmail API**
 - Click on **Enabled APIs & services** from the left panel
 - Click the **ENABLE APIS AND SERVICES** button on the top bar
