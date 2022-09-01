@@ -10,18 +10,16 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 # For command line arguments
-import argparse, textwrap
+import argparse
 parser = argparse.ArgumentParser(description="Gmail Helper", formatter_class=argparse.RawTextHelpFormatter)
-parser.add_argument("--manual", action="store_true", default=False, help="specifies if the script is running in manual mode")
-parser.add_argument("-a", choices={"email","search","none"}, default="none", help="Send Email, Search Email, Do nothing")
+parser.add_argument("--action", choices={"send","search","none"}, default="none", help="Send Email, Search Email, Do nothing")
 parser.add_argument("-e", action='store', type=str, help="Recipient email address")
 parser.add_argument("-s", action='store', type=str, default="",help="Subject line")
 parser.add_argument("-b", action='store', type=str, default="",help="Email body")
 parser.add_argument("-k", action='store', type=str, help="Search keyword")
 
 args = parser.parse_args()
-mode = args.manual
-action = args.a
+action = args.action
 recipient = args.e
 subject = args.s
 body = args.b
@@ -37,10 +35,11 @@ class MyGmail:
         """
         Authenticate the google api client and return the service object 
         to make further calls
-        ARGS
+
+        Args:
             None
-        RETURNS
-            service api object from gmail for making calls
+        Returns:
+            service api object from Gmail for making calls
         """
         self.creds = None
         # The file token.json stores the user's access and refresh tokens, and is
@@ -75,16 +74,17 @@ class MyGmail:
             body: email body
 
         Returns:
-            _type_: _description_
+            send_email: Message object, including message id
         """
         try:
             message = email.message.EmailMessage()
 
-            message.set_content(body)
-
+            # receiver and subject
             message['To'] = receiver
-            #message['From'] = 'testa7090@gmail.com'
             message['Subject'] = subject
+
+            # message body
+            message.set_content(body)
 
             # encoded message
             encoded_message = {
@@ -92,19 +92,19 @@ class MyGmail:
             }
             
             send_email = (self.service.users().messages().send(userId="me", body=encoded_message).execute())
-            print(f'Sent message Id: {send_email["id"]}')
 
         except HttpError as error:
-            print(f'An error in send_email occurred: {error}')
+            print(f'An error occurred: {error}')
             send_email = None
 
-        return send_email   
+        return send_email
 
 
     def search_email(self, keyword):
         """
         Search the inbox for emails using standard gmail search parameters
         and return a list of email IDs for each result
+
         Args:
             keyword: search operators you can use with Gmail
             (see https://support.google.com/mail/answer/7190?hl=en for a list)
@@ -115,6 +115,7 @@ class MyGmail:
         try:
             # initiate the list for returning
             list_ids = []
+
             # get the id of all messages that are in the search string
             search_ids = self.service.users().messages().list(userId='me', q=keyword).execute()
             
@@ -135,68 +136,23 @@ class MyGmail:
                 list_ids = ids[0]['id']
                 return [list_ids]
             
-        except Exception:
-            print("An error in search_email occured: %s")
-
-
-    # def get_emails(self, msg_ids):
-    #     """_summary_
-
-    #     Args:
-    #         service: service: the google api service object already instantiated
-    #         msg_ids: message id
-    #     """
-    #     message_choice = input("Would you like to see a snippet of the emails? (y/n) ").lower()
-
-    #     msg_num = 0
-    #     while (message_choice == 'yes' or message_choice == 'y'):
-            
-    #         message = self.service.users().messages().get(userId='me', id=msg_ids[msg_num]).execute()
-    #         email_data = message['payload']['headers']
-    #         for values in email_data:
-    #             name = values['name']
-    #             if name == "From":
-    #                 sender = values['value']
-    #                 print("From: " + sender)
-    #                 print("   " + message['snippet'][:50] + "...")
-    #                 print("\n")
-
-    #         msg_num += 1
-    #         if msg_num == len(msg_ids):
-    #             message_choice = 'n'
-    #             print("No more emails, goodbye.")
-    #         else:
-    #             message_choice = input("Would you like to see the next email? (y/n) ").lower()
+        except HttpError as error:
+            print(f'An error in search_email occurred: {error}')
 
 
 if __name__ == '__main__':
 
-    # Service object from the Gmail API
+    # service object from the Gmail API
     service = MyGmail()
     
-    if mode: # User specified arguments from the command line
-
-        if action == "email":
-            service.send_email(recipient, subject, body)
-        elif action == "search":
-            emails_matched = service.search_email(keyword)
-            print("Number of emails with keyword '" + str(keyword) + ": " + str(len(emails_matched)))
-            if emails_matched:
-                print("Email IDs: ", emails_matched)
-                final_content = service.get_emails(emails_matched)
-        else:
-            print("No action selected")
-
-    else:   # Call send_email and search_email functions with some default arguments
-        
-        # Send email with some default arguments
-        service.send_email("testa7090@gmail.com", "Test subject", body="This is the test body of the email")
-
-        # Search emails for keyword 'test'
-        keyword='test'
+    if action == "send":         # send email
+        sent_email = service.send_email(recipient, subject, body)
+        print(f'Sent email: {sent_email}')
+    elif action == "search":    # search emails
         emails_matched = service.search_email(keyword)
-        print("Number of emails with keyword '" + str(keyword) + "': " + str(len(emails_matched)))
         if emails_matched:
-            print("Email IDs: \n", emails_matched)
-            final_content = service.get_emails(emails_matched)
- 
+            print("Number of emails with keyword '" + str(keyword) + "': " + str(len(emails_matched)))
+            print("Email IDs: ", emails_matched)
+    else:
+        print("No action selected")
+

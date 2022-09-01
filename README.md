@@ -40,13 +40,13 @@ pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-
 
 **Step 3: Setup and configure the Gmail API connection**
 
-For a new Gmail account, the instructions setup and configure a Gmail API connection can be found here: [Gmail API setup](GmailAPI.md)
+For a new Gmail account, the instructions setup and configure a Gmail API connection can be found here: [Gmail API setup](GmailAPIsetup.md)
 
 <br>
 
 **Step 4: Authenticate**
 
-Before running the program initial setup is necessary. Make sure a working credentials.json file from the [Gmail API setup](GmailAPI.md) is in the project folder. 
+Before running the program initial setup is necessary. Make sure a working credentials.json file from the [Gmail API setup](GmailAPIsetup.md) is in the project folder. 
 
 Next, from the command line, execute the following command:
 <br>
@@ -70,10 +70,10 @@ python gmail_helper.py --help
 
 ### To send an email:
 ```zsh
-python gmail_helper.py --manual --action send --email "testuser@gmail.com" --subject "galaxy" --body "hello universe"
+python gmail_helper.py --action send -e "testa7090@gmail.com" -s "galaxy" -b "hello universe"
 ```
 
 ### To search emails with a keyword:
 ```zsh
-python gmail_helper.py --manual --action search --keyword "hello world" 
+python gmail_helper.py --action search -k "hello world" 
 ```
