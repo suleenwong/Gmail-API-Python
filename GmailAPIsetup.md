@@ -29,10 +29,16 @@ For a new Gmail account, the following steps should be done to setup the Gmail A
 
 <br>
 
-**Step 3. Creating OAuth ClientId**
+**Step 3: Creating OAuth ClientId**
 - Click on **Credentials** from the left panel
-- Hit the **+ CREATE CREDENTIALS** button on top bar.
+- Click the **+ CREATE CREDENTIALS** button on top bar.
     - Select **OAuth client ID**
     - Application type **Desktop App**
     - Create
     - Download json, rename it as 'credential.json' and paste it inside project folder
+
+**Step 4: Enable the Gmail API**
+- Click on **Enabled APIs & services** from the left panel
+- Click the **ENABLE APIS AND SERVICES** button on the top bar
+- Scroll down to Google Workspace and click on **Gmail API**
+    - Click the **Enable** button
