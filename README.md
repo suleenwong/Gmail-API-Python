@@ -46,7 +46,7 @@ For a new Gmail account, the instructions setup and configure a Gmail API connec
 
 **Step 4: Authenticate**
 
-Before running the program initial setup is necessary. Make sure a working credentials.json file from the [Gmail API setup](GmailAPIsetup.md) is in the project folder. 
+Before running the program initial setup is necessary. Make sure a working credentials.json file from the [Gmail API setup](GmailAPIsetup.md) is in the project folder and the Gmail account has been added as a test user for the Google Cloud project.
 
 Next, from the command line, execute the following command:
 <br>
